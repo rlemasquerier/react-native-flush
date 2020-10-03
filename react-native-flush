@@ -1,0 +1,42 @@
+#! /bin/bash
+set -e
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+NO_COLOR='\033[0m'
+
+error(){
+  echo -e >&2 "❌  ${RED}$1${NO_COLOR}"
+}
+
+success(){
+  echo -e "✅  ${GREEN}$1${NO_COLOR}"
+}
+
+info(){
+  echo -e "ℹ️  ${CYAN}$1${NO_COLOR}"
+}
+
+warn(){
+  echo -e "⚠️  ${YELLOW}$1${NO_COLOR}"
+}
+
+DIRECTORIES=(node_modules ios/Pods ios/build android/app/build android/.gradle .jest dist)
+
+for DIR in "${DIRECTORIES[@]}"; do
+  if [ -d "$DIR" ]; then
+    info "Removing folder $DIR..."
+    {
+      rm -rf "$DIR" && 
+      success "Done."
+    } || {
+      error "Could not remove folder $DIR"
+    }
+  else
+    warn "Folder $DIR does not exist, skipping."
+  fi
+done
+
+
